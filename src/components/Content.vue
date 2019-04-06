@@ -1,5 +1,5 @@
 <template>
-  <main role="main" class="container">
+  <b-container>
     <div class="starter-template">
       <h1>Bootstrap starter template</h1>
       <p class="lead">
@@ -7,7 +7,7 @@
         <br>All you get is this text and a mostly barebones HTML document.
       </p>
     </div>
-  </main>
+  </b-container>
 </template>
 
 <script>
