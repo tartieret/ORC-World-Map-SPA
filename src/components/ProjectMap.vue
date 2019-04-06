@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: "Map"
+  name: "ProjectMap"
 };
 </script>
 

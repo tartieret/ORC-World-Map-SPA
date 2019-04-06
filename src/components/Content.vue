@@ -1,13 +1,8 @@
 <template>
-  <b-container>
-    <div class="starter-template">
-      <h1>Bootstrap starter template</h1>
-      <p class="lead">
-        Use this document as a way to quickly start any new project.
-        <br>All you get is this text and a mostly barebones HTML document.
-      </p>
-    </div>
-  </b-container>
+  <div>
+    <!-- page content -->
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
@@ -18,8 +13,12 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.starter-template {
-  padding: 3rem 1.5rem;
-  text-align: center;
+.footer {
+  background-color: #f5f5f5;
+}
+
+.footer > .container {
+  padding-right: 15px;
+  padding-left: 15px;
 }
 </style>
