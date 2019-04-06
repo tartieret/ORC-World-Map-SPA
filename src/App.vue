@@ -1,17 +1,19 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to ORC World Map"/>
+    <NavBar></NavBar>
+    <Content></Content>
   </div>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
+import Content from "./components/Content.vue";
+import NavBar from "./components/NavBar.vue";
 
 export default {
   name: "app",
   components: {
-    HelloWorld
+    NavBar,
+    Content
   }
 };
 </script>
