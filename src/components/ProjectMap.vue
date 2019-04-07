@@ -3,6 +3,8 @@
 </template>
 
 <script>
+import projects from "../assets/data.json";
+
 export default {
   name: "project-map",
   data: function() {
@@ -15,40 +17,27 @@ export default {
           position: google.maps.ControlPosition.BOTTOM_CENTER
         }
       },
-      projects: [],
+      projects: projects,
       map: null,
       markers: [],
       applicationColors: {
         geothermal: "#F00",
         biomass: "#9f9",
         solar: "#ff9",
-        heat_recovery: "#99f"
+        "heat recovery": "#99f"
       }
     };
   },
   methods: {
-    // load the projects
-    loadProjects() {
-      this.projects = [
-        { name: "P1", latitude: 30, longitude: -10, application: "geothermal" },
-        { name: "P2", latitude: 40, longitude: -10, application: "biomass" },
-        {
-          name: "P3",
-          latitude: -20,
-          longitude: -10,
-          application: "heat_recovery"
-        },
-        { name: "P4", latitude: -10, longitude: -10, application: "solar" }
-      ];
-    },
     displayProjects() {
       this.projects.forEach(project => {
         // build a marker for the project
-        const position = new google.maps.LatLng(
-          project.latitude,
-          project.longitude
-        );
-        const color = this.applicationColors[project.application];
+        const coordinates = project["GPS Coordinates"].split(",");
+        if (!coordinates) {
+          return;
+        }
+        const position = new google.maps.LatLng(coordinates[0], coordinates[1]);
+        const color = this.applicationColors[project.Application];
 
         const marker = new google.maps.Marker({
           position,
@@ -75,7 +64,7 @@ export default {
     buildInfoWindow(project) {
       const contentString =
         '<div id="content">' +
-        `<h1>${project.name}</h1>` +
+        `<h1>${project["Project name"]}</h1>` +
         '<div id="bodyContent">' +
         "<p><b>Uluru</b>, also referred to as <b>Ayers Rock</b>, is a large " +
         "sandstone rock formation in the southern part of the " +
@@ -100,7 +89,6 @@ export default {
     }
   },
   mounted: function() {
-    this.loadProjects();
     const element = document.getElementById("googleMap");
     this.map = new google.maps.Map(element, this.options);
     this.displayProjects(this.map);
