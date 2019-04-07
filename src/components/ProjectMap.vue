@@ -17,7 +17,13 @@ export default {
       },
       projects: [],
       map: null,
-      markers: []
+      markers: [],
+      applicationColors: {
+        geothermal: "#F00",
+        biomass: "#9f9",
+        solar: "#ff9",
+        heat_recovery: "#99f"
+      }
     };
   },
   methods: {
@@ -41,10 +47,18 @@ export default {
           project.latitude,
           project.longitude
         );
+        const color = this.applicationColors[project.application];
         const marker = new google.maps.Marker({
           position,
           map: this.map,
-          title: project.name
+          title: project.name,
+          icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 4,
+            fillColor: color,
+            fillOpacity: 1,
+            strokeWeight: 1
+          }
         });
         this.markers.push(marker);
       });
