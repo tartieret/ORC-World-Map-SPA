@@ -1,13 +1,48 @@
 <template>
   <b-container fluid>
     <b-row>
-      <b-col sm="3">
+      <b-col sm="6" md="5" lg="auto">
         <div id="search-panel">
-          <p>This is an overview of all Organic Rankine Cycle units installed in the world.</p>
+          <p>
+            This is an overview of all
+            <a href="https://en.wikipedia.org/wiki/Organic_Rankine_cycle">Organic Rankine Cycle</a> units installed in the world.
+          </p>
           <p>Click for more information or read the analysis. Last update : 09/20/2018</p>
-          <h2>Application</h2>
-          <h2>Installed Capacity</h2>
-          <h2>Commissionning Year</h2>
+          <h3>Applications</h3>
+          <b-form-group>
+            <b-form-checkbox-group
+              id="applications"
+              v-model="search.applications"
+              name="applications"
+            >
+              <b-form-checkbox value="geothermal">Geothermal</b-form-checkbox>
+              <b-form-checkbox value="biomass">Biomass</b-form-checkbox>
+              <b-form-checkbox value="solar">Solar</b-form-checkbox>
+              <b-form-checkbox value="heat_recovery">Heat Recovery</b-form-checkbox>
+            </b-form-checkbox-group>
+          </b-form-group>
+          <h3>Installed Capacity</h3>
+          <h3>Commissionning Year</h3>
+          <b-form-checkbox
+            id="showInContruction"
+            v-model="search.showInContruction"
+            name="showInContruction"
+            value="true"
+            unchecked-value="false"
+          >Show projects in contruction</b-form-checkbox>
+          <div class="button-section">
+            <b-button variant="success">Search</b-button>
+            <b-button variant="outline-secondary">Reset</b-button>
+          </div>
+
+          <b-alert variant="success" show>Found {{markers.length}} projects</b-alert>
+
+          <div id="search-footer">
+            <small>
+              A project by
+              <a href="http://ca.linkedin.com/in/thomastartiere">Thomas Tartière</a>
+            </small>
+          </div>
         </div>
       </b-col>
       <div id="googleMap"></div>
@@ -22,6 +57,10 @@ export default {
   name: "project-map",
   data: function() {
     return {
+      search: {
+        showInContruction: false,
+        applications: ["geothermal", "biomass", "solar", "heat_recovery"]
+      },
       options: {
         zoom: 3,
         center: new google.maps.LatLng(30, -10),
@@ -125,5 +164,15 @@ export default {
   padding: 15px;
   background-color: white;
   opacity: 0.9;
+  max-width: 500px;
+}
+
+.button-section {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.button-section > button {
+  margin-right: 5px;
 }
 </style>
