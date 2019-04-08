@@ -1,5 +1,18 @@
 <template>
-  <div class="google-map" id="googleMap"></div>
+  <b-container fluid>
+    <b-row>
+      <b-col sm="3">
+        <div id="search-panel">
+          <p>This is an overview of all Organic Rankine Cycle units installed in the world.</p>
+          <p>Click for more information or read the analysis. Last update : 09/20/2018</p>
+          <h2>Application</h2>
+          <h2>Installed Capacity</h2>
+          <h2>Commissionning Year</h2>
+        </div>
+      </b-col>
+      <div id="googleMap"></div>
+    </b-row>
+  </b-container>
 </template>
 
 <script>
@@ -97,12 +110,20 @@ export default {
 </script>
 
 <style scoped>
-.google-map {
-  position: absolute;
+#googleMap {
+  position: absolute !important;
+  left: 0;
+  top: 0;
   width: 100%;
-  top: 76px;
-  bottom: 0;
-  margin: 0 auto;
-  background: gray;
+  height: 100%;
+  z-index: -1;
+}
+
+#search-panel {
+  text-align: left;
+  margin-top: 15px;
+  padding: 15px;
+  background-color: white;
+  opacity: 0.9;
 }
 </style>
