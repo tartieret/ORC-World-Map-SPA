@@ -5,9 +5,12 @@
         <div id="search-panel">
           <p>
             This is an overview of all
-            <a href="https://en.wikipedia.org/wiki/Organic_Rankine_cycle">Organic Rankine Cycle</a> units installed in the world.
+            <a
+              href="https://en.wikipedia.org/wiki/Organic_Rankine_cycle"
+            >Organic Rankine Cycle</a> units installed in the world.
           </p>
           <p>Click for more information or read the analysis. Last update : 09/20/2018</p>
+
           <h3>Applications</h3>
           <b-form-group>
             <b-form-checkbox-group
@@ -21,8 +24,30 @@
               <b-form-checkbox value="heat_recovery">Heat Recovery</b-form-checkbox>
             </b-form-checkbox-group>
           </b-form-group>
+
           <h3>Installed Capacity</h3>
+          <vue-slider
+            v-model="search.powers"
+            :min="sliderRanges.powers.min"
+            :max="sliderRanges.powers.max"
+            :interval="10"
+            :lazy="true"
+            :enable-cross="false"
+            :tooltip="'always'"
+            :tooltip-placement="'bottom'"
+          ></vue-slider>
+
           <h3>Commissionning Year</h3>
+          <vue-slider
+            v-model="search.years"
+            :min="sliderRanges.years.min"
+            :max="sliderRanges.years.max"
+            :lazy="true"
+            :enable-cross="false"
+            :tooltip="'always'"
+            :tooltip-placement="'bottom'"
+          ></vue-slider>
+
           <b-form-checkbox
             id="showInContruction"
             v-model="search.showInContruction"
@@ -51,6 +76,9 @@
 </template>
 
 <script>
+import VueSlider from "vue-slider-component";
+import "vue-slider-component/theme/default.css";
+
 import projects from "../assets/data.json";
 
 export default {
@@ -59,6 +87,8 @@ export default {
     return {
       search: {
         showInContruction: false,
+        powers: [0.1, 50000],
+        years: [1970, 2019],
         applications: ["geothermal", "biomass", "solar", "heat_recovery"]
       },
       options: {
@@ -70,6 +100,10 @@ export default {
         }
       },
       projects: projects,
+      sliderRanges: {
+        years: { min: 1970, max: 2019 },
+        powers: { min: 0.1, max: 50000 }
+      },
       map: null,
       markers: [],
       applicationColors: {
@@ -79,6 +113,24 @@ export default {
         "heat recovery": "#99f"
       }
     };
+  },
+  created() {
+    // adjust the year slider range based on the project data
+    this.search.years = this.getMinMaxYears;
+    this.sliderRanges.years.min = this.search.years[0];
+    this.sliderRanges.years.max = this.search.years[1];
+    // adjust the capacity slider range based on the project data
+    this.search.powers = [0, this.getMaxCapacity];
+    this.sliderRanges.powers.min = this.search.powers[0];
+    this.sliderRanges.powers.max = this.search.powers[1];
+
+    console.log(this.search.powers);
+  },
+  mounted: function() {
+    // add the projects to the map
+    const element = document.getElementById("googleMap");
+    this.map = new google.maps.Map(element, this.options);
+    this.displayProjects(this.map);
   },
   methods: {
     displayProjects() {
@@ -105,10 +157,10 @@ export default {
         });
         // add the info window and open it when the user clicks
         // on the marker
-        const infowindow = this.buildInfoWindow(project);
-        marker.addListener("click", function() {
-          infowindow.open(this.map, marker);
-        });
+        // const infowindow = this.buildInfoWindow(project);
+        // marker.addListener("click", function() {
+        //   infowindow.open(this.map, marker);
+        // });
 
         this.markers.push(marker);
       });
@@ -140,10 +192,39 @@ export default {
       return infowindow;
     }
   },
-  mounted: function() {
-    const element = document.getElementById("googleMap");
-    this.map = new google.maps.Map(element, this.options);
-    this.displayProjects(this.map);
+  computed: {
+    getMinMaxYears() {
+      let minYear = null;
+      let maxYear = null;
+      this.projects.forEach(project => {
+        let year = project["Commissioning Year"];
+        if (year) {
+          if (!minYear || year < minYear) {
+            minYear = year;
+          }
+          if (!maxYear || (year > maxYear && year < 3000)) {
+            maxYear = year;
+          }
+        }
+      });
+      return [minYear, maxYear];
+    },
+    getMaxCapacity() {
+      let maxCapacity = 10000;
+      this.projects.forEach(project => {
+        let power = project["Project total installed capacity (kW)"];
+        if (power) {
+          if (power > maxCapacity) {
+            maxCapacity = power;
+          }
+        }
+      });
+      return maxCapacity;
+    }
+  },
+
+  components: {
+    "vue-slider": VueSlider
   }
 };
 </script>
@@ -174,5 +255,11 @@ export default {
 
 .button-section > button {
   margin-right: 5px;
+}
+
+.vue-slider {
+  margin-bottom: 40px;
+  margin-left: 15px;
+  margin-right: 15px;
 }
 </style>
