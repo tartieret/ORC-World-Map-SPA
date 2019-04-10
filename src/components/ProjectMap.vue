@@ -109,7 +109,7 @@ export default {
       },
       map: null,
       markers: [],
-      nb_found: 0,
+      nbProjectFound: 0,
       applicationColors: {
         geothermal: "#F00",
         biomass: "#9f9",
@@ -133,6 +133,7 @@ export default {
     const element = document.getElementById("googleMap");
     this.map = new google.maps.Map(element, this.options);
     this.displayProjects(this.map);
+    this.nbProjectFound = this.markers.length;
   },
   methods: {
     displayProjects() {
@@ -201,6 +202,7 @@ export default {
       return infowindow;
     },
     filterProjects(event) {
+      let nb_shown = 0;
       const filter = this.search;
       this.markers.forEach(marker => {
         const props = marker.properties;
@@ -213,9 +215,11 @@ export default {
           props.power <= filter.powers[1]
         ) {
           show = true;
+          nb_shown++;
         }
         marker.setVisible(show);
       });
+      this.nbProjectFound = nb_shown;
     }
   },
   computed: {
@@ -246,15 +250,6 @@ export default {
         }
       });
       return maxCapacity;
-    },
-    nbProjectFound() {
-      let nb = 0;
-      this.markers.forEach(marker => {
-        if (marker.visible) {
-          nb++;
-        }
-      });
-      return nb;
     }
   },
 
