@@ -17,6 +17,7 @@
               id="applications"
               v-model="search.applications"
               name="applications"
+              v-on:input="filterProjects"
             >
               <b-form-checkbox value="geothermal">Geothermal</b-form-checkbox>
               <b-form-checkbox value="biomass">Biomass</b-form-checkbox>
@@ -35,6 +36,7 @@
             :enable-cross="false"
             :tooltip="'always'"
             :tooltip-placement="'bottom'"
+            v-on:change="filterProjects"
           ></vue-slider>
 
           <h3>Commissionning Year</h3>
