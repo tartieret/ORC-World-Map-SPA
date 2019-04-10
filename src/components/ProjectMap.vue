@@ -21,7 +21,7 @@
               <b-form-checkbox value="geothermal">Geothermal</b-form-checkbox>
               <b-form-checkbox value="biomass">Biomass</b-form-checkbox>
               <b-form-checkbox value="solar">Solar</b-form-checkbox>
-              <b-form-checkbox value="heat_recovery">Heat Recovery</b-form-checkbox>
+              <b-form-checkbox value="heat recovery">Heat Recovery</b-form-checkbox>
             </b-form-checkbox-group>
           </b-form-group>
 
@@ -61,7 +61,7 @@
             <b-button variant="outline-secondary">Reset</b-button>
           </div>
 
-          <b-alert variant="success" show>Found {{markers.length}} projects</b-alert>
+          <b-alert variant="success" show>Found {{nbProjectFound}} projects</b-alert>
 
           <div id="search-footer">
             <small>
@@ -90,7 +90,7 @@ export default {
         showInContruction: false,
         powers: [0.1, 50000],
         years: [1970, 2019],
-        applications: ["geothermal", "biomass", "solar", "heat_recovery"]
+        applications: ["geothermal", "biomass", "solar", "heat recovery"]
       },
       options: {
         zoom: 3,
@@ -107,6 +107,7 @@ export default {
       },
       map: null,
       markers: [],
+      nb_found: 0,
       applicationColors: {
         geothermal: "#F00",
         biomass: "#9f9",
@@ -124,8 +125,6 @@ export default {
     this.search.powers = [0, this.getMaxCapacity];
     this.sliderRanges.powers.min = this.search.powers[0];
     this.sliderRanges.powers.max = this.search.powers[1];
-
-    console.log(this.search.powers);
   },
   mounted: function() {
     // add the projects to the map
@@ -164,10 +163,10 @@ export default {
         });
         // add the info window and open it when the user clicks
         // on the marker
-        // const infowindow = this.buildInfoWindow(project);
-        // marker.addListener("click", function() {
-        //   infowindow.open(this.map, marker);
-        // });
+        const infowindow = this.buildInfoWindow(project);
+        marker.addListener("click", function() {
+          infowindow.open(this.map, marker);
+        });
 
         this.markers.push(marker);
       });
@@ -176,6 +175,7 @@ export default {
       const contentString =
         '<div id="content">' +
         `<h1>${project["Project name"]}</h1>` +
+        `<h3>${project["Commissioning Year"]}</h3>` +
         '<div id="bodyContent">' +
         "<p><b>Uluru</b>, also referred to as <b>Ayers Rock</b>, is a large " +
         "sandstone rock formation in the southern part of the " +
@@ -199,11 +199,17 @@ export default {
       return infowindow;
     },
     filterProjects(event) {
+      const filter = this.search;
       this.markers.forEach(marker => {
         const props = marker.properties;
-        const filter = this.search;
         let show = false;
-        if (props.year >= filter.years[0] || props.year <= filter.years[1]) {
+        if (
+          props.year >= filter.years[0] &&
+          props.year <= filter.years[1] &&
+          filter.applications.indexOf(props.application) > -1 &&
+          props.power >= filter.powers[0] &&
+          props.power <= filter.powers[1]
+        ) {
           show = true;
         }
         marker.setVisible(show);
@@ -238,6 +244,15 @@ export default {
         }
       });
       return maxCapacity;
+    },
+    nbProjectFound() {
+      let nb = 0;
+      this.markers.forEach(marker => {
+        if (marker.visible) {
+          nb++;
+        }
+      });
+      return nb;
     }
   },
 
