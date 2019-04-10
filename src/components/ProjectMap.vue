@@ -46,6 +46,7 @@
             :enable-cross="false"
             :tooltip="'always'"
             :tooltip-placement="'bottom'"
+            v-on:change="filterProjects"
           ></vue-slider>
 
           <b-form-checkbox
@@ -152,13 +153,13 @@ export default {
             scale: 4,
             fillColor: color,
             fillOpacity: 1,
-            strokeWeight: 1,
-            properties: {
-              application: project.Application,
-              power: project["Project total installed capacity (kW)"],
-              year: project["Commissioning Year"],
-              manufacturer: project["Manufacturer"]
-            }
+            strokeWeight: 1
+          },
+          properties: {
+            application: project.Application,
+            power: project["Project total installed capacity (kW)"],
+            year: project["Commissioning Year"],
+            manufacturer: project["Manufacturer"]
           }
         });
         // add the info window and open it when the user clicks
@@ -197,7 +198,7 @@ export default {
       });
       return infowindow;
     },
-    filterProjects() {
+    filterProjects(event) {
       this.markers.forEach(marker => {
         const props = marker.properties;
         const filter = this.search;
