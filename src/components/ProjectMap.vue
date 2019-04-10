@@ -152,7 +152,13 @@ export default {
             scale: 4,
             fillColor: color,
             fillOpacity: 1,
-            strokeWeight: 1
+            strokeWeight: 1,
+            properties: {
+              application: project.Application,
+              power: project["Project total installed capacity (kW)"],
+              year: project["Commissioning Year"],
+              manufacturer: project["Manufacturer"]
+            }
           }
         });
         // add the info window and open it when the user clicks
@@ -190,6 +196,17 @@ export default {
         content: contentString
       });
       return infowindow;
+    },
+    filterProjects() {
+      this.markers.forEach(marker => {
+        const props = marker.properties;
+        const filter = this.search;
+        let show = false;
+        if (props.year >= filter.years[0] || props.year <= filter.years[1]) {
+          show = true;
+        }
+        marker.setVisible(show);
+      });
     }
   },
   computed: {
