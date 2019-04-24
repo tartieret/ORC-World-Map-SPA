@@ -52,15 +52,15 @@
           ></vue-slider>
 
           <b-form-checkbox
-            id="showInContruction"
-            v-model="search.showInContruction"
-            name="showInContruction"
-            value="true"
-            unchecked-value="false"
-          >Show projects in contruction</b-form-checkbox>
+            id="showInConstruction"
+            v-model="search.showInConstruction"
+            name="showInConstruction"
+            :value="true"
+            :unchecked-value="false"
+          >Show projects in construction</b-form-checkbox>
           <div class="button-section">
             <b-button variant="success">Search</b-button>
-            <b-button variant="outline-secondary">Reset</b-button>
+            <b-button variant="outline-secondary" @click="reset()">Reset</b-button>
           </div>
 
           <b-alert variant="success" show>Found {{nbProjectFound}} projects</b-alert>
@@ -89,7 +89,7 @@ export default {
   data: function() {
     return {
       search: {
-        showInContruction: false,
+        showInConstruction: false,
         powers: [0.1, 50000],
         years: [1970, 2019],
         applications: ["geothermal", "biomass", "solar", "heat recovery"]
@@ -136,6 +136,24 @@ export default {
     this.nbProjectFound = this.markers.length;
   },
   methods: {
+    // Reset the filters
+    reset() {
+      this.search.years = [
+        this.sliderRanges.years.min,
+        this.sliderRanges.years.max
+      ];
+      this.search.powers = [
+        this.sliderRanges.powers.min,
+        this.sliderRanges.powers.max
+      ];
+      this.search.applications = [
+        "geothermal",
+        "biomass",
+        "solar",
+        "heat recovery"
+      ];
+      this.search.showInConstruction = false;
+    },
     displayProjects() {
       this.projects.forEach(project => {
         // build a marker for the project
