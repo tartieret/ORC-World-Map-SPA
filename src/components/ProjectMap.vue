@@ -223,20 +223,21 @@ export default {
       return infowindow;
     },
     filterProjects(event) {
-      let nb_shown = 0;
+      let nb_shown = this.markers.length;
       const filter = this.search;
       this.markers.forEach(marker => {
         const props = marker.properties;
-        let show = false;
+        let show = true;
         if (
-          props.year >= filter.years[0] &&
-          props.year <= filter.years[1] &&
-          filter.applications.indexOf(props.application) > -1 &&
-          props.power >= filter.powers[0] &&
-          props.power <= filter.powers[1]
+          props.year < filter.years[0] ||
+          props.year > filter.years[1] ||
+          //filter.applications.indexOf(props.application) == -1 ||
+          props.power < filter.powers[0] ||
+          props.power > filter.powers[1] ||
+          (props.year == 3000 && !filter.showInContruction)
         ) {
-          show = true;
-          nb_shown++;
+          show = false;
+          nb_shown--;
         }
         marker.setVisible(show);
       });
