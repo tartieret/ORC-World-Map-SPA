@@ -9,7 +9,7 @@
               href="https://en.wikipedia.org/wiki/Organic_Rankine_cycle"
             >Organic Rankine Cycle</a> units installed in the world.
           </p>
-          <p>Click for more information or read the analysis. Last update : 09/20/2018</p>
+          <p>Click for more information or read the analysis.</p>
 
           <h3>Applications</h3>
           <b-form-group>
@@ -68,7 +68,8 @@
           <div id="search-footer">
             <small>
               A project by
-              <a href="http://ca.linkedin.com/in/thomastartiere">Thomas Tartière</a>
+              <a href="http://ca.linkedin.com/in/thomastartiere">Thomas Tartière</a>.
+              Last update 09/20/2018
             </small>
           </div>
         </div>
@@ -94,13 +95,15 @@ export default {
         years: [1970, 2019],
         applications: ["geothermal", "biomass", "solar", "heat recovery"]
       },
-      options: {
+      mapOptions: {
         zoom: 3,
         center: new google.maps.LatLng(30, -10),
+        draggable: true,
         mapTypeControl: true,
         mapTypeControlOptions: {
           position: google.maps.ControlPosition.BOTTOM_CENTER
         }
+        //gestureHandling: "greedy"
       },
       projects: projects,
       sliderRanges: {
@@ -131,7 +134,7 @@ export default {
   mounted: function() {
     // add the projects to the map
     const element = document.getElementById("googleMap");
-    this.map = new google.maps.Map(element, this.options);
+    this.map = new google.maps.Map(element, this.mapOptions);
     this.displayProjects(this.map);
     this.nbProjectFound = this.markers.length;
   },
