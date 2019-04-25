@@ -80,6 +80,7 @@
 </template>
 
 <script>
+import gmapsInit from '../utils/gmaps';
 import VueSlider from "vue-slider-component";
 import "vue-slider-component/theme/default.css";
 
@@ -95,7 +96,7 @@ export default {
         years: [1970, 2019],
         applications: ["geothermal", "biomass", "solar", "heat recovery"]
       },
-      mapOptions: {
+      /*mapOptions: {
         zoom: 3,
         center: new google.maps.LatLng(30, -10),
         draggable: true,
@@ -104,7 +105,7 @@ export default {
           position: google.maps.ControlPosition.BOTTOM_CENTER
         }
         //gestureHandling: "greedy"
-      },
+      },*/
       projects: projects,
       sliderRanges: {
         years: { min: 1970, max: 2019 },
@@ -131,12 +132,24 @@ export default {
     this.sliderRanges.powers.min = this.search.powers[0];
     this.sliderRanges.powers.max = this.search.powers[1];
   },
-  mounted: function() {
+  async mounted() {
+    try {
+        // initialize google map
+        const google = await gmapsInit();
+        const element = document.getElementById("googleMap");
+        const map = new google.maps.Map(element, {
+            center: new google.maps.LatLng(30, -10),
+            zoom: 3,
+        });
+
+    } catch(error) {
+        console.error(error);
+    }
     // add the projects to the map
-    const element = document.getElementById("googleMap");
-    this.map = new google.maps.Map(element, this.mapOptions);
-    this.displayProjects(this.map);
-    this.nbProjectFound = this.markers.length;
+    // const element = document.getElementById("googleMap");
+    // this.map = new google.maps.Map(element, this.mapOptions);
+    // this.displayProjects(this.map);
+    // this.nbProjectFound = this.markers.length;
   },
   methods: {
     // Reset the filters
@@ -282,13 +295,16 @@ export default {
 </script>
 
 <style scoped>
+
 #googleMap {
-  position: absolute !important;
+  /*position: absolute !important;
   left: 0;
   top: 0;
   width: 100%;
-  height: 100%;
-  z-index: -1;
+  height: 100%;*/
+  z-index: 1;
+  width: 100vw;
+  height: 100vh;
 }
 
 #search-panel {
@@ -298,6 +314,7 @@ export default {
   background-color: white;
   opacity: 0.9;
   max-width: 500px;
+  z-index: 2;
 }
 
 .button-section {
