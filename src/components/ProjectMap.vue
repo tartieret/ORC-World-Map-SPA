@@ -135,21 +135,19 @@ export default {
   async mounted() {
     try {
         // initialize google map
-        const google = await gmapsInit();
+        this.google = await gmapsInit();
         const element = document.getElementById("googleMap");
-        const map = new google.maps.Map(element, {
-            center: new google.maps.LatLng(30, -10),
+        this.map = new this.google.maps.Map(element, {
+            center: new this.google.maps.LatLng(30, -10),
             zoom: 3,
         });
 
+        // add the projects to the map
+        this.displayProjects();
+        this.nbProjectFound = this.markers.length;
     } catch(error) {
         console.error(error);
     }
-    // add the projects to the map
-    // const element = document.getElementById("googleMap");
-    // this.map = new google.maps.Map(element, this.mapOptions);
-    // this.displayProjects(this.map);
-    // this.nbProjectFound = this.markers.length;
   },
   methods: {
     // Reset the filters
@@ -177,15 +175,15 @@ export default {
         if (!coordinates) {
           return;
         }
-        const position = new google.maps.LatLng(coordinates[0], coordinates[1]);
+        const position = new this.google.maps.LatLng(coordinates[0], coordinates[1]);
         const color = this.applicationColors[project.Application];
 
-        const marker = new google.maps.Marker({
+        const marker = new this.google.maps.Marker({
           position,
           map: this.map,
           title: project.name,
           icon: {
-            path: google.maps.SymbolPath.CIRCLE,
+            path: this.google.maps.SymbolPath.CIRCLE,
             scale: 4,
             fillColor: color,
             fillOpacity: 1,
@@ -230,7 +228,7 @@ export default {
         "</div>" +
         "</div>";
 
-      const infowindow = new google.maps.InfoWindow({
+      const infowindow = new this.google.maps.InfoWindow({
         content: contentString
       });
       return infowindow;
