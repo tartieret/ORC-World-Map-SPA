@@ -1,13 +1,14 @@
 <template>
   <b-container fluid>
     <b-row>
-      <b-col sm="6" md="5" lg="auto">
+      <b-col sm="12" md="6" lg="4">
         <div id="search-panel">
           <p>
             This is an overview of all
-            <a
-              href="https://en.wikipedia.org/wiki/Organic_Rankine_cycle"
-            >Organic Rankine Cycle</a> units installed in the world.
+            <a href="https://en.wikipedia.org/wiki/Organic_Rankine_cycle"
+              >Organic Rankine Cycle</a
+            >
+            units installed in the world.
           </p>
           <p>Click for more information or read the analysis.</p>
 
@@ -22,7 +23,9 @@
               <b-form-checkbox value="geothermal">Geothermal</b-form-checkbox>
               <b-form-checkbox value="biomass">Biomass</b-form-checkbox>
               <b-form-checkbox value="solar">Solar</b-form-checkbox>
-              <b-form-checkbox value="heat recovery">Heat Recovery</b-form-checkbox>
+              <b-form-checkbox value="heat recovery"
+                >Heat Recovery</b-form-checkbox
+              >
             </b-form-checkbox-group>
           </b-form-group>
 
@@ -57,19 +60,25 @@
             name="showInConstruction"
             :value="true"
             :unchecked-value="false"
-          >Show projects in construction</b-form-checkbox>
+            >Show projects in construction</b-form-checkbox
+          >
           <div class="button-section">
             <b-button variant="success">Search</b-button>
-            <b-button variant="outline-secondary" @click="reset()">Reset</b-button>
+            <b-button variant="outline-secondary" @click="reset()"
+              >Reset</b-button
+            >
           </div>
 
-          <b-alert variant="success" show>Found {{nbProjectFound}} projects</b-alert>
+          <b-alert variant="success" show
+            >Found {{ nbProjectFound }} projects</b-alert
+          >
 
           <div id="search-footer">
             <small>
               A project by
-              <a href="http://ca.linkedin.com/in/thomastartiere">Thomas Tartière</a>.
-              Last update 09/20/2018
+              <a href="http://ca.linkedin.com/in/thomastartiere"
+                >Thomas Tartière</a
+              >. Last update 09/20/2018
             </small>
           </div>
         </div>
@@ -80,7 +89,7 @@
 </template>
 
 <script>
-import gmapsInit from '../utils/gmaps';
+import gmapsInit from "../utils/gmaps";
 import VueSlider from "vue-slider-component";
 import "vue-slider-component/theme/default.css";
 
@@ -88,13 +97,13 @@ import projects from "../assets/data.json";
 
 export default {
   name: "project-map",
-  data: function() {
+  data: function () {
     return {
       search: {
         showInConstruction: false,
         powers: [0.1, 50000],
         years: [1970, 2019],
-        applications: ["geothermal", "biomass", "solar", "heat recovery"]
+        applications: ["geothermal", "biomass", "solar", "heat recovery"],
       },
       /*mapOptions: {
         zoom: 3,
@@ -109,7 +118,7 @@ export default {
       projects: projects,
       sliderRanges: {
         years: { min: 1970, max: 2019 },
-        powers: { min: 0.1, max: 50000 }
+        powers: { min: 0.1, max: 50000 },
       },
       map: null,
       markers: [],
@@ -118,8 +127,8 @@ export default {
         geothermal: "#F00",
         biomass: "#9f9",
         solar: "#ff9",
-        "heat recovery": "#99f"
-      }
+        "heat recovery": "#99f",
+      },
     };
   },
   created() {
@@ -134,19 +143,19 @@ export default {
   },
   async mounted() {
     try {
-        // initialize google map
-        this.google = await gmapsInit();
-        const element = document.getElementById("googleMap");
-        this.map = new this.google.maps.Map(element, {
-            center: new this.google.maps.LatLng(30, -10),
-            zoom: 3,
-        });
+      // initialize google map
+      this.google = await gmapsInit();
+      const element = document.getElementById("googleMap");
+      this.map = new this.google.maps.Map(element, {
+        center: new this.google.maps.LatLng(30, -10),
+        zoom: 3,
+      });
 
-        // add the projects to the map
-        this.displayProjects();
-        this.nbProjectFound = this.markers.length;
-    } catch(error) {
-        console.error(error);
+      // add the projects to the map
+      this.displayProjects();
+      this.nbProjectFound = this.markers.length;
+    } catch (error) {
+      console.error(error);
     }
   },
   methods: {
@@ -154,28 +163,31 @@ export default {
     reset() {
       this.search.years = [
         this.sliderRanges.years.min,
-        this.sliderRanges.years.max
+        this.sliderRanges.years.max,
       ];
       this.search.powers = [
         this.sliderRanges.powers.min,
-        this.sliderRanges.powers.max
+        this.sliderRanges.powers.max,
       ];
       this.search.applications = [
         "geothermal",
         "biomass",
         "solar",
-        "heat recovery"
+        "heat recovery",
       ];
       this.search.showInConstruction = false;
     },
     displayProjects() {
-      this.projects.forEach(project => {
+      this.projects.forEach((project) => {
         // build a marker for the project
         const coordinates = project["GPS Coordinates"].split(",");
         if (!coordinates) {
           return;
         }
-        const position = new this.google.maps.LatLng(coordinates[0], coordinates[1]);
+        const position = new this.google.maps.LatLng(
+          coordinates[0],
+          coordinates[1]
+        );
         const color = this.applicationColors[project.Application];
 
         const marker = new this.google.maps.Marker({
@@ -187,19 +199,19 @@ export default {
             scale: 4,
             fillColor: color,
             fillOpacity: 1,
-            strokeWeight: 1
+            strokeWeight: 1,
           },
           properties: {
             application: project.Application,
             power: project["Project total installed capacity (kW)"],
             year: project["Commissioning Year"],
-            manufacturer: project["Manufacturer"]
-          }
+            manufacturer: project["Manufacturer"],
+          },
         });
         // add the info window and open it when the user clicks
         // on the marker
         const infowindow = this.buildInfoWindow(project);
-        marker.addListener("click", function() {
+        marker.addListener("click", function () {
           infowindow.open(this.map, marker);
         });
 
@@ -229,14 +241,14 @@ export default {
         "</div>";
 
       const infowindow = new this.google.maps.InfoWindow({
-        content: contentString
+        content: contentString,
       });
       return infowindow;
     },
     filterProjects(event) {
       let nb_shown = this.markers.length;
       const filter = this.search;
-      this.markers.forEach(marker => {
+      this.markers.forEach((marker) => {
         const props = marker.properties;
         let show = true;
         if (
@@ -253,13 +265,13 @@ export default {
         marker.setVisible(show);
       });
       this.nbProjectFound = nb_shown;
-    }
+    },
   },
   computed: {
     getMinMaxYears() {
       let minYear = null;
       let maxYear = null;
-      this.projects.forEach(project => {
+      this.projects.forEach((project) => {
         let year = project["Commissioning Year"];
         if (year) {
           if (!minYear || year < minYear) {
@@ -274,7 +286,7 @@ export default {
     },
     getMaxCapacity() {
       let maxCapacity = 10000;
-      this.projects.forEach(project => {
+      this.projects.forEach((project) => {
         let power = project["Project total installed capacity (kW)"];
         if (power) {
           if (power > maxCapacity) {
@@ -283,17 +295,16 @@ export default {
         }
       });
       return maxCapacity;
-    }
+    },
   },
 
   components: {
-    "vue-slider": VueSlider
-  }
+    "vue-slider": VueSlider,
+  },
 };
 </script>
 
 <style scoped>
-
 #googleMap {
   /*position: absolute !important;
   left: 0;
@@ -306,6 +317,7 @@ export default {
 }
 
 #search-panel {
+  position: absolute;
   text-align: left;
   margin-top: 15px;
   padding: 15px;
