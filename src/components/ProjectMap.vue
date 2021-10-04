@@ -245,7 +245,7 @@ export default {
       });
       return infowindow;
     },
-    filterProjects(event) {
+    filterProjects() {
       let nb_shown = this.markers.length;
       const filter = this.search;
       this.markers.forEach((marker) => {

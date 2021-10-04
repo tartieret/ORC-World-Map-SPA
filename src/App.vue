@@ -16,7 +16,8 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+@import "~@/assets/scss/vendors/bootstrap-vue/index";
 body {
   margin: 0;
   padding: 0;
