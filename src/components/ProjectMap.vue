@@ -102,7 +102,7 @@ export default {
   data: function () {
     return {
       search: {
-        showInConstruction: false,
+        showInConstruction: true,
         powers: [0.1, 50000],
         years: [1970, 2019],
         applications: ["geothermal", "biomass", "solar", "heat recovery"],
@@ -177,7 +177,7 @@ export default {
         "solar",
         "heat recovery",
       ];
-      this.search.showInConstruction = false;
+      this.search.showInConstruction = true;
     },
     displayProjects() {
       this.projects.forEach((project) => {
@@ -338,12 +338,12 @@ export default {
 
 <style scoped>
 #googleMap {
-  /*position: absolute !important;
+  position: absolute !important;
   left: 0;
   top: 0;
   width: 100%;
-  height: 100%;*/
-  z-index: 1;
+  height: 100%;
+  z-index: 0;
   width: 100vw;
   height: 100vh;
 }
