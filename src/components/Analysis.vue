@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="content-simple">
-      <h1>ORC Market - Updated Analysis (2017)</h1>
+      <h1 class="mt-md-3">ORC Market - Updated Analysis (2017)</h1>
 
       <p>
         <small
@@ -24,7 +24,7 @@
         </p>
       </div>
 
-      <h1>ORC Market : A World Overview (2016)</h1>
+      <h1 class="mt-md-3">ORC Market : A World Overview (2016)</h1>
 
       <p>
         <small
@@ -64,78 +64,84 @@
         </p>
 
         <p>The following ORC manufacturers have been included :</p>
+      </div>
 
-        <div class="row">
+      <b-row>
+        <b-col md="4" sm="6">
           <ul>
-            <div class="col-md-4">
-              <li><a href="http://www.abb.com/">ABB</a></li>
-              <li>
-                <a href="http://www.adoratec.com/companyprofilnav.html"
-                  >Adoratec / Maxxtec</a
-                >
-              </li>
-              <li><a href="http://e-rational.net/">BEP E-Rational</a></li>
-              <li><a href="https://www.calnetix.com/">Calnetix</a></li>
-              <li>
-                <a href="http://heatrecoverysolutions.com/"
-                  >CETY / Heat Recovery Solutions</a
-                >
-              </li>
-              <li>
-                <a href="http://www.durr-cyplan.com/">D&uuml;rr Cyplan</a>
-              </li>
-              <li><a href="http://www.enertime.com/en/home">Enertime</a></li>
-              <li><a href="http://www.enex.is">ENEX</a></li>
-            </div>
-            <div class="col-md-4">
-              <li><a href="http://www.enogia.com/">ENOGIA</a></li>
-              <li>Enreco</li>
-              <li><a href="http://www.exergy-orc.com/">Exergy</a></li>
-              <li><a href="https://electratherm.com/">Electratherm</a></li>
-
-              <li>
-                <a href="http://powergen.gepower.com/applications/chp.html"
-                  >General Electric</a
-                >
-              </li>
-              <li><a href="http://www.gmk.info/">GMK</a></li>
-              <li>
-                <a href="http://www.johnsoncontrols.com/">Johnson Control</a>
-              </li>
-              <li>
-                <a
-                  href="http://www.kaishancompressor.com/Industry-Products/Screw-Expander-Power-Stations/Organic-Rankine-Cycle-Power-Plant-Expansion-Screw/Organic-Rankine-Cycle-Power-Plant-Expansion-Screw.html"
-                  >Kaishan</a
-                >
-              </li>
-            </div>
-            <div class="col-md-4">
-              <li>
-                <a href="http://www.opcon.se/web/oes_en.aspx"
-                  >Opcon Energy Systems</a
-                >
-              </li>
-              <li><a href="http://www.ormat.com">ORMAT</a></li>
-
-              <li><a href="http://www.tas.com/">TAS</a></li>
-              <li><a href="http://www.tmeic.com/TMEIC%20Global">TMEIC</a></li>
-              <li><a href="http://www.triogen.nl/">Triogen</a></li>
-              <li>
-                <a href="http://www.turboden.eu/en/home/index.php">Turboden</a>
-              </li>
-              <li>
-                <a
-                  href="http://www.pw.utc.com/Press/Story/20121017-1200/2012/All%20Categories"
-                  >UTC Power</a
-                >
-              </li>
-              <li>
-                <a href="http://www.g-tet.com/">gT - Energy Technologies</a>
-              </li>
-            </div>
+            <li><a href="http://www.abb.com/">ABB</a></li>
+            <li>
+              <a href="http://www.adoratec.com/companyprofilnav.html"
+                >Adoratec / Maxxtec</a
+              >
+            </li>
+            <li><a href="http://e-rational.net/">BEP E-Rational</a></li>
+            <li><a href="https://www.calnetix.com/">Calnetix</a></li>
+            <li>
+              <a href="http://heatrecoverysolutions.com/"
+                >CETY / Heat Recovery Solutions</a
+              >
+            </li>
+            <li>
+              <a href="http://www.durr-cyplan.com/">D&uuml;rr Cyplan</a>
+            </li>
+            <li><a href="http://www.enertime.com/en/home">Enertime</a></li>
+            <li><a href="http://www.enex.is">ENEX</a></li>
           </ul>
-        </div>
-        <br />
+        </b-col>
+        <b-col md="4" sm="6">
+          <ul>
+            <li><a href="http://www.enogia.com/">ENOGIA</a></li>
+            <li>Enreco</li>
+            <li><a href="http://www.exergy-orc.com/">Exergy</a></li>
+            <li><a href="https://electratherm.com/">Electratherm</a></li>
+
+            <li>
+              <a href="http://powergen.gepower.com/applications/chp.html"
+                >General Electric</a
+              >
+            </li>
+            <li><a href="http://www.gmk.info/">GMK</a></li>
+            <li>
+              <a href="http://www.johnsoncontrols.com/">Johnson Control</a>
+            </li>
+            <li>
+              <a
+                href="http://www.kaishancompressor.com/Industry-Products/Screw-Expander-Power-Stations/Organic-Rankine-Cycle-Power-Plant-Expansion-Screw/Organic-Rankine-Cycle-Power-Plant-Expansion-Screw.html"
+                >Kaishan</a
+              >
+            </li>
+          </ul>
+        </b-col>
+        <b-col md="4" sm="6">
+          <ul>
+            <li>
+              <a href="http://www.opcon.se/web/oes_en.aspx"
+                >Opcon Energy Systems</a
+              >
+            </li>
+            <li><a href="http://www.ormat.com">ORMAT</a></li>
+
+            <li><a href="http://www.tas.com/">TAS</a></li>
+            <li><a href="http://www.tmeic.com/TMEIC%20Global">TMEIC</a></li>
+            <li><a href="http://www.triogen.nl/">Triogen</a></li>
+            <li>
+              <a href="http://www.turboden.eu/en/home/index.php">Turboden</a>
+            </li>
+            <li>
+              <a
+                href="http://www.pw.utc.com/Press/Story/20121017-1200/2012/All%20Categories"
+                >UTC Power</a
+              >
+            </li>
+            <li>
+              <a href="http://www.g-tet.com/">gT - Energy Technologies</a>
+            </li>
+          </ul>
+        </b-col>
+      </b-row>
+
+      <div class="row">
         <p>
           In addition there are other manufacturers that have not published
           their list of references and declined to take part to the survey.
@@ -197,12 +203,15 @@
           The following figures give the installed capacity and number of
           projects that were commissioned per year and per application.
         </p>
-        <div class="data-img">
-          <img src="@/assets/images/total_installed_capacity_per_year.png" />
-        </div>
-        <div class="data-img">
-          <img src="@/assets/images/total_installed_projects_per_year.png" />
-        </div>
+
+        <b-row>
+          <b-col lg="6" md="6" sm="12">
+            <img src="@/assets/images/total_installed_capacity_per_year.png" />
+          </b-col>
+          <b-col lg="6" md="6" sm="12">
+            <img src="@/assets/images/total_installed_projects_per_year.png" />
+          </b-col>
+        </b-row>
         <p>
           The market peaked in 2013, with 325.5 MWel of new capacity. Since
           then, we can notice a slo down in 2014 and 2015, with roughly 250 MWel
@@ -263,7 +272,10 @@
       <div class="row">
         <h2 id="heat_recovery">Heat Recovery applications</h2>
         <div class="data-img">
-          <img style="max-width: 1000px" src="data/heat_recovery.png" />
+          <img
+            style="max-width: 1000px"
+            src="@/assets/images/heat_recovery.png"
+          />
         </div>
         <p>
           With 349.1 MWel of installed capacity in the world, and 18.5 MW of new
@@ -359,4 +371,7 @@ export default {
 </script>
 
 <style scoped>
+img {
+  max-width: 100%;
+}
 </style>
