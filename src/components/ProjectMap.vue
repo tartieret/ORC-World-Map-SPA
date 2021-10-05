@@ -5,14 +5,16 @@
         <div id="search-panel">
           <p>
             This is an overview of all
-            <a href="https://en.wikipedia.org/wiki/Organic_Rankine_cycle"
+            <a
+              target="_blank"
+              href="https://en.wikipedia.org/wiki/Organic_Rankine_cycle"
               >Organic Rankine Cycle</a
             >
             units installed in the world.
           </p>
           <p>Click for more information or read the analysis.</p>
 
-          <h3>Applications</h3>
+          <h4>Applications</h4>
           <b-form-group>
             <b-form-checkbox-group
               id="applications"
@@ -29,7 +31,7 @@
             </b-form-checkbox-group>
           </b-form-group>
 
-          <h3>Installed Capacity</h3>
+          <h4>Installed Capacity</h4>
           <vue-slider
             v-model="search.powers"
             :min="sliderRanges.powers.min"
@@ -42,7 +44,7 @@
             v-on:change="filterProjects"
           ></vue-slider>
 
-          <h3>Commissionning Year</h3>
+          <h4>Commissionning Year</h4>
           <vue-slider
             v-model="search.years"
             :min="sliderRanges.years.min"
@@ -245,20 +247,44 @@ export default {
       });
       return infowindow;
     },
+    isProjectIncluded(project) {
+      const filter = this.search;
+      // filter by type of project
+      if (
+        !Object.prototype.hasOwnProperty.call(
+          this.selectedApplicationMap,
+          project.application
+        )
+      ) {
+        return false;
+      }
+
+      // filter by date
+      if (project.year == 3000) {
+        if (!filter.showInContruction) {
+          return false;
+        }
+      } else if (
+        project.year < filter.years[0] ||
+        project.year > filter.years[1]
+      ) {
+        return false;
+      }
+      // filter by power
+      if (
+        project.power < filter.powers[0] ||
+        project.power > filter.powers[1]
+      ) {
+        return false;
+      }
+
+      return true;
+    },
     filterProjects() {
       let nb_shown = this.markers.length;
-      const filter = this.search;
       this.markers.forEach((marker) => {
-        const props = marker.properties;
         let show = true;
-        if (
-          props.year < filter.years[0] ||
-          props.year > filter.years[1] ||
-          //filter.applications.indexOf(props.application) == -1 ||
-          props.power < filter.powers[0] ||
-          props.power > filter.powers[1] ||
-          (props.year == 3000 && !filter.showInContruction)
-        ) {
+        if (!this.isProjectIncluded(marker.properties)) {
           show = false;
           nb_shown--;
         }
@@ -268,16 +294,22 @@ export default {
     },
   },
   computed: {
+    selectedApplicationMap() {
+      return this.search.applications.reduce(function (map, value) {
+        map[value] = true;
+        return map;
+      }, {});
+    },
     getMinMaxYears() {
-      let minYear = null;
-      let maxYear = null;
+      let minYear = 3000;
+      let maxYear = 0;
       this.projects.forEach((project) => {
         let year = project["Commissioning Year"];
         if (year) {
-          if (!minYear || year < minYear) {
+          if (year < minYear) {
             minYear = year;
           }
-          if (!maxYear || (year > maxYear && year < 3000)) {
+          if (year < 3000 && year > maxYear) {
             maxYear = year;
           }
         }
