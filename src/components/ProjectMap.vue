@@ -62,6 +62,7 @@
             name="showInConstruction"
             :value="true"
             :unchecked-value="false"
+            v-on:change="filterProjects"
             >Show projects in construction</b-form-checkbox
           >
           <div class="button-section">
@@ -178,6 +179,8 @@ export default {
         "heat recovery",
       ];
       this.search.showInConstruction = true;
+
+      this.filterProjects();
     },
     displayProjects() {
       this.projects.forEach((project) => {
@@ -261,7 +264,7 @@ export default {
 
       // filter by date
       if (project.year == 3000) {
-        if (!filter.showInContruction) {
+        if (!filter.showInConstruction) {
           return false;
         }
       } else if (
