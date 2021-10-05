@@ -216,6 +216,7 @@ export default {
         // add the info window and open it when the user clicks
         // on the marker
         const infowindow = this.buildInfoWindow(project);
+        marker.infowindow = infowindow;
         marker.addListener("click", function () {
           infowindow.open(this.map, marker);
         });
@@ -223,27 +224,55 @@ export default {
         this.markers.push(marker);
       });
     },
+
     buildInfoWindow(project) {
-      const contentString =
+      function showValue(value) {
+        if (!value) {
+          return "?";
+        }
+        return value;
+      }
+      let contentString =
         '<div id="content">' +
-        `<h1>${project["Project name"]}</h1>` +
-        `<h3>${project["Commissioning Year"]}</h3>` +
-        '<div id="bodyContent">' +
-        "<p><b>Uluru</b>, also referred to as <b>Ayers Rock</b>, is a large " +
-        "sandstone rock formation in the southern part of the " +
-        "Northern Territory, central Australia. It lies 335&#160;km (208&#160;mi) " +
-        "south west of the nearest large town, Alice Springs; 450&#160;km " +
-        "(280&#160;mi) by road. Kata Tjuta and Uluru are the two major " +
-        "features of the Uluru - Kata Tjuta National Park. Uluru is " +
-        "sacred to the Pitjantjatjara and Yankunytjatjara, the " +
-        "Aboriginal people of the area. It has many springs, waterholes, " +
-        "rock caves and ancient paintings. Uluru is listed as a World " +
-        "Heritage Site.</p>" +
-        '<p>Attribution: Uluru, <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">' +
-        "https://en.wikipedia.org/w/index.php?title=Uluru</a> " +
-        "(last visited June 22, 2009).</p>" +
-        "</div>" +
-        "</div>";
+        `<h3>${project["Project name"]}</h3>` +
+        '<div id="bodyContent" style="text-align:left;line-height: 1.2rem;">' +
+        `<b>Manufacturer: </b>${project["Manufacturer"]}</br>` +
+        `<b>Location: </b>${project["City"]}, ${project["Country"]}<br/>`;
+
+      if (project["Commissioning Year"] != 3000) {
+        contentString += `<b>Commissioning: </b>${project["Commissioning Year"]}<br/>`;
+      } else {
+        contentString += `<b>Commissioning: </b>In construction<br/>`;
+      }
+
+      contentString += `<b>Model: </b>${showValue(project["Model"])}<br/>`;
+      contentString += `<b>Installed Capacity: </b>${showValue(
+        project["Project total installed capacity (kW)"]
+      )}<br/>`;
+      contentString += `<b>Number of units: </b>${showValue(
+        project["Number of units"]
+      )}<br/>`;
+      contentString += `<b>Working Fluid: </b>${showValue(
+        project["Working Fluid"]
+      )}</br>`;
+      contentString += `<b>Turbine: </b>${showValue(project["Turbine"])}</br>`;
+
+      if (project["Customer"]) {
+        contentString += `<b>Customer: </b>${showValue(
+          project["Customer"]
+        )}</br>`;
+      }
+      if (project["Description"]) {
+        contentString += `<br/><p>${project["Description"]}</p>`;
+      }
+      if (project["Image"]) {
+        contentString += `<br/><img src="${project["Image"]}" style="max-width:400px;"/><br/><br/>`;
+      }
+
+      if (project["Manufacturer website"]) {
+        contentString += `<b>Manufacturer website: </b><a target="_blank" href="${project["Manufacturer website"]}">${project["Manufacturer website"]}</a></p>`;
+      }
+      contentString += "</div>";
 
       const infowindow = new this.google.maps.InfoWindow({
         content: contentString,
