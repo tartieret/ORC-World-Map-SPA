@@ -146,64 +146,12 @@
         from Chinese manufacturers.
       </p>
 
-      <div class="row">
-        <h2 id="contact">Contact the Author</h2>
-        <div class="col-lg-6">
-          <form
-            class="form-horizontal"
-            action="https://formspree.io/mvovdegp"
-            method="POST"
-          >
-            <input
-              type="hidden"
-              name="_subject"
-              value="Contact from ORC World Map"
-            />
-            <div class="form-group">
-              <input
-                type="text"
-                class="form-control"
-                name="name"
-                placeholder="Your Name..."
-                maxlength="60"
-              />
-            </div>
-            <div class="form-group">
-              <input
-                type="tel"
-                class="form-control"
-                name="phone"
-                placeholder="Phone number..."
-                maxlength="20"
-              />
-            </div>
-            <div class="form-group">
-              <input
-                type="email"
-                class="form-control"
-                name="_replyto"
-                placeholder="Your Email..."
-                maxlength="40"
-              />
-            </div>
-            <div class="form-group">
-              <textarea
-                class="form-control"
-                name="message"
-                style="height: 130px"
-                placeholder="Write down your message..."
-              ></textarea>
-            </div>
-            <input type="text" name="_gotcha" style="display: none" />
-            <input
-              type="hidden"
-              name="_next"
-              value="http://orc-world-map.org"
-            />
-            <button type="submit" class="btn btn-green">SEND</button>
-          </form>
-        </div>
-      </div>
+      <h2 id="contact">Contact the Author</h2>
+
+      <p>
+        You can send me a message from the
+        <router-link to="/contact">contact page</router-link>.
+      </p>
 
       <br />
       <h2 id="disclaimer">Disclaimer</h2>

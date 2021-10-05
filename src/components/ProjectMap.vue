@@ -79,7 +79,7 @@
           <div id="search-footer">
             <small>
               A project by
-              <a href="http://ca.linkedin.com/in/thomastartiere"
+              <a href="https://ca.linkedin.com/in/thomastartiere"
                 >Thomas Tartière</a
               >. Last update 09/20/2018
             </small>

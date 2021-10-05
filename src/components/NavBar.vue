@@ -11,6 +11,7 @@
         <b-navbar-nav class="ml-auto">
           <b-nav-item to="/">Map</b-nav-item>
           <!-- <b-nav-item to="/dashboard">Dashboard</b-nav-item> -->
+          <b-nav-item to="/analysis">Analysis</b-nav-item>
           <b-nav-item to="/about">About</b-nav-item>
           <b-nav-item to="/contact">Contact</b-nav-item>
         </b-navbar-nav>
