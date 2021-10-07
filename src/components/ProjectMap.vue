@@ -96,7 +96,7 @@ import gmapsInit from "../utils/gmaps";
 import VueSlider from "vue-slider-component";
 import "vue-slider-component/theme/default.css";
 
-import projects from "../assets/data.json";
+import projects from "../assets/data_all.json";
 
 export default {
   name: "project-map",
@@ -132,9 +132,15 @@ export default {
         solar: "#ff9",
         "heat recovery": "#99f",
       },
+      icons: {
+        geothermal: "/icons/geothermal.png",
+        solar: "/icons/solar.png",
+        biomass: "/icons/biomass.png",
+        "heat recovery": "/icons/heat_recovery.png",
+      },
     };
   },
-  created() {
+  async created() {
     // adjust the year slider range based on the project data
     this.search.years = this.getMinMaxYears;
     this.sliderRanges.years.min = this.search.years[0];
@@ -143,8 +149,7 @@ export default {
     this.search.powers = [0, this.getMaxCapacity];
     this.sliderRanges.powers.min = this.search.powers[0];
     this.sliderRanges.powers.max = this.search.powers[1];
-  },
-  async mounted() {
+
     try {
       // initialize google map
       this.google = await gmapsInit();
@@ -162,6 +167,13 @@ export default {
     }
   },
   methods: {
+    getIconUrl(application) {
+      let baseUrl = "https://orc-world-map.org";
+      if (process.env.NODE_ENV == "development") {
+        baseUrl = "http://localhost:8080";
+      }
+      return baseUrl + this.icons[application];
+    },
     // Reset the filters
     reset() {
       this.search.years = [
@@ -185,6 +197,13 @@ export default {
     displayProjects() {
       this.projects.forEach((project) => {
         // build a marker for the project
+        if (
+          !("GPS Coordinates" in project) ||
+          !project["GPS Coordinates"] ||
+          project["Application"] == "other"
+        ) {
+          return;
+        }
         const coordinates = project["GPS Coordinates"].split(",");
         if (!coordinates) {
           return;
@@ -193,19 +212,12 @@ export default {
           coordinates[0],
           coordinates[1]
         );
-        const color = this.applicationColors[project.Application];
 
         const marker = new this.google.maps.Marker({
           position,
           map: this.map,
           title: project.name,
-          icon: {
-            path: this.google.maps.SymbolPath.CIRCLE,
-            scale: 4,
-            fillColor: color,
-            fillOpacity: 1,
-            strokeWeight: 1,
-          },
+          icon: this.getIconUrl(project.Application),
           properties: {
             application: project.Application,
             power: project["Project total installed capacity (kW)"],
@@ -236,8 +248,19 @@ export default {
         '<div id="content">' +
         `<h3>${project["Project name"]}</h3>` +
         '<div id="bodyContent" style="text-align:left;line-height: 1.2rem;">' +
-        `<b>Manufacturer: </b>${project["Manufacturer"]}</br>` +
-        `<b>Location: </b>${project["City"]}, ${project["Country"]}<br/>`;
+        `<b>Manufacturer: </b>${project["Manufacturer"]}</br>`;
+      if (project["City"]) {
+        contentString += `<b>Location: </b>${project["City"]}, ${project["Country"]}<br/>`;
+      } else {
+        contentString += `<b>Location: </b>${project["Country"]}<br/>`;
+      }
+
+      contentString += `<b>Application: </b>${project["Application"]}`;
+      if (project["Application 2"]) {
+        contentString += `- ${project["Application 2"]}</br>`;
+      } else {
+        contentString += "</br>";
+      }
 
       if (project["Commissioning Year"] != 3000) {
         contentString += `<b>Commissioning: </b>${project["Commissioning Year"]}<br/>`;
@@ -265,9 +288,9 @@ export default {
       if (project["Description"]) {
         contentString += `<br/><p>${project["Description"]}</p>`;
       }
-      if (project["Image"]) {
-        contentString += `<br/><img src="${project["Image"]}" style="max-width:400px;"/><br/><br/>`;
-      }
+      // if (project["Image"]) {
+      //   contentString += `<br/><img src="${project["Image"]}" style="max-width:400px;"/><br/><br/>`;
+      // }
 
       if (project["Manufacturer website"]) {
         contentString += `<b>Manufacturer website: </b><a target="_blank" href="${project["Manufacturer website"]}">${project["Manufacturer website"]}</a></p>`;
@@ -315,12 +338,12 @@ export default {
     filterProjects() {
       let nb_shown = this.markers.length;
       this.markers.forEach((marker) => {
-        let show = true;
         if (!this.isProjectIncluded(marker.properties)) {
-          show = false;
+          marker.setMap(null);
           nb_shown--;
+        } else {
+          marker.setMap(this.map);
         }
-        marker.setVisible(show);
       });
       this.nbProjectFound = nb_shown;
     },
