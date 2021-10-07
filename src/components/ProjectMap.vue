@@ -157,6 +157,11 @@ export default {
       this.map = new this.google.maps.Map(element, {
         center: new this.google.maps.LatLng(30, -10),
         zoom: 3,
+        mapTypeControl: true,
+        mapTypeControlOptions: {
+          style: this.google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+          position: this.google.maps.ControlPosition.BOTTOM_CENTER,
+        },
       });
 
       // add the projects to the map
