@@ -4,16 +4,17 @@ import Vue from 'vue'
 import './plugins/bootstrap-vue'
 import BootstrapVue from 'bootstrap-vue'
 import VueRouter from 'vue-router'
+import Vuex from 'vuex'
 
 import * as VueGoogleMaps from 'vue2-google-maps';
-import GmapCluster from 'vue2-google-maps/dist/components/cluster';
-
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
+import store from './store'
+
 Vue.use(BootstrapVue)
 Vue.use(VueRouter)
-Vue.component('GmapCluster', GmapCluster)
+Vue.use(Vuex)
 
 import App from './App.vue'
 import {
@@ -56,5 +57,6 @@ Vue.use(VueGoogleMaps, {
 
 new Vue({
   router: router,
+  store: store,
   render: h => h(App),
 }).$mount('#app')
