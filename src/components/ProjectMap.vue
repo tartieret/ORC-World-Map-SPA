@@ -96,12 +96,13 @@ import gmapsInit from "../utils/gmaps";
 import VueSlider from "vue-slider-component";
 import "vue-slider-component/theme/default.css";
 
-import projects from "../assets/data_all.json";
+// import projects from "../assets/data_all.json";
 
 export default {
   name: "project-map",
   data: function () {
     return {
+      isLoading: false,
       search: {
         showInConstruction: true,
         powers: [0.1, 50000],
@@ -118,7 +119,7 @@ export default {
         }
         //gestureHandling: "greedy"
       },*/
-      projects: projects,
+      projects: [],
       sliderRanges: {
         years: { min: 1970, max: 2019 },
         powers: { min: 0.1, max: 50000 },
@@ -150,6 +151,8 @@ export default {
     this.sliderRanges.powers.min = this.search.powers[0];
     this.sliderRanges.powers.max = this.search.powers[1];
 
+    await this.loadProjects();
+
     try {
       // initialize google map
       this.google = await gmapsInit();
@@ -172,6 +175,9 @@ export default {
     }
   },
   methods: {
+    async loadProjects() {
+      await this.$store.dispatch("loadProjects").catch(() => {});
+    },
     getIconUrl(application) {
       let baseUrl = "https://orc-world-map.org";
       if (process.env.NODE_ENV == "development") {
@@ -397,6 +403,14 @@ export default {
 </script>
 
 <style scoped>
+.loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+}
 #googleMap {
   position: absolute !important;
   left: 0;

@@ -1,10 +1,6 @@
 /**
  * Get the list of projects
  */
-function getProjects(state) {
+export function getProjects(state) {
     return state.projects;
-}
-
-export default {
-    getProjects
 }
