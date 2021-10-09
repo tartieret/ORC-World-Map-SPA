@@ -6,11 +6,10 @@ function convertResponseToJSON(text) {
 
 function formatSheetData(json) {
     const data = [] /* this array will eventually be populated with the contents of the spreadsheet's rows */
+    const headers = json.table.cols.map(obj => obj.label).filter(label => label !== "");
+    const rows = json.table.rows;
 
     console.log(json);
-    const headers = json.table.cols.map(obj => obj.label).filter(label => label !== "");
-    console.log("Headers", headers);
-    const rows = json.table.rows;
 
     for (const row of rows) {
         let item = {};
@@ -31,8 +30,9 @@ function formatSheetData(json) {
 /**
  * Load list of projects from Google Sheet
  */
-// function loadProjects({ commit }) {
+// export function loadProjects({ commit }) {
 export function loadProjects() {
+
     return new Promise((resolve, reject) => {
 
         fetch(URL)
@@ -40,7 +40,9 @@ export function loadProjects() {
             .then(text => convertResponseToJSON(text))
             .then(json => {
                 const data = formatSheetData(json);
-                console.log(data);
+                // data.forEach(project => {
+                //     commit("ADD_PROJECT", project);
+                // })
                 resolve(data);
             })
             .catch(error => {
@@ -49,4 +51,3 @@ export function loadProjects() {
             });
     });
 }
-

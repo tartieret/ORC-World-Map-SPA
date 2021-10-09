@@ -28,6 +28,9 @@
               <b-form-checkbox value="heat recovery"
                 >Heat Recovery</b-form-checkbox
               >
+              <b-form-checkbox value="Waste to Energy"
+                >Waste to Energy</b-form-checkbox
+              >
             </b-form-checkbox-group>
           </b-form-group>
 
@@ -44,7 +47,7 @@
             v-on:change="filterProjects"
           ></vue-slider>
 
-          <h4>Commissionning Year</h4>
+          <h4>Construction year</h4>
           <vue-slider
             v-model="search.years"
             :min="sliderRanges.years.min"
@@ -103,26 +106,22 @@ export default {
   data: function () {
     return {
       isLoading: false,
+      projects: [],
       search: {
         showInConstruction: true,
-        powers: [0.1, 50000],
-        years: [1970, 2019],
-        applications: ["geothermal", "biomass", "solar", "heat recovery"],
+        powers: [0, 50000],
+        years: [1970, 2021],
+        applications: [
+          "geothermal",
+          "biomass",
+          "solar",
+          "heat recovery",
+          "Waste to Energy",
+        ],
       },
-      /*mapOptions: {
-        zoom: 3,
-        center: new google.maps.LatLng(30, -10),
-        draggable: true,
-        mapTypeControl: true,
-        mapTypeControlOptions: {
-          position: google.maps.ControlPosition.BOTTOM_CENTER
-        }
-        //gestureHandling: "greedy"
-      },*/
-      projects: [],
       sliderRanges: {
-        years: { min: 1970, max: 2019 },
-        powers: { min: 0.1, max: 50000 },
+        years: { min: 1970, max: 2021 },
+        powers: { min: 0, max: 50000 },
       },
       map: null,
       markers: [],
@@ -132,26 +131,21 @@ export default {
         biomass: "#9f9",
         solar: "#ff9",
         "heat recovery": "#99f",
+        "Waste to Energy": "#99f",
       },
       icons: {
         geothermal: "/icons/geothermal.png",
         solar: "/icons/solar.png",
         biomass: "/icons/biomass.png",
         "heat recovery": "/icons/heat_recovery.png",
+        "Waste to Energy": "/icons/heat_recovery.png",
       },
     };
   },
   async created() {
-    // adjust the year slider range based on the project data
-    this.search.years = this.getMinMaxYears;
-    this.sliderRanges.years.min = this.search.years[0];
-    this.sliderRanges.years.max = this.search.years[1];
-    // adjust the capacity slider range based on the project data
-    this.search.powers = [0, this.getMaxCapacity];
-    this.sliderRanges.powers.min = this.search.powers[0];
-    this.sliderRanges.powers.max = this.search.powers[1];
-
     await this.loadProjects();
+
+    // this.initializeFilters();
 
     try {
       // initialize google map
@@ -176,7 +170,29 @@ export default {
   },
   methods: {
     async loadProjects() {
-      await this.$store.dispatch("loadProjects").catch(() => {});
+      this.isLoading = true;
+      console.log("Load projects");
+      await this.$store
+        .dispatch("loadProjects")
+        .then((projects) => {
+          this.projects = projects;
+          console.debug(projects);
+        })
+        .catch(() => {})
+        .finally(() => {
+          this.isLoading = false;
+        });
+    },
+    initializeFilters() {
+      console.debug(this.projects);
+      // adjust the year slider range based on the project data
+      this.search.years = this.getMinMaxYears;
+      this.sliderRanges.years.min = this.search.years[0];
+      this.sliderRanges.years.max = this.search.years[1];
+      // adjust the capacity slider range based on the project data
+      this.search.powers = [0, this.getMaxCapacity];
+      this.sliderRanges.powers.min = this.search.powers[0];
+      this.sliderRanges.powers.max = this.search.powers[1];
     },
     getIconUrl(application) {
       let baseUrl = "https://orc-world-map.org";
@@ -209,30 +225,29 @@ export default {
       this.projects.forEach((project) => {
         // build a marker for the project
         if (
-          !("GPS Coordinates" in project) ||
-          !project["GPS Coordinates"] ||
+          !("Latitude" in project) ||
+          !("Longitude" in project) ||
+          !project["Latitude"] ||
+          !project["Longitude"] ||
           project["Application"] == "other"
         ) {
           return;
         }
-        const coordinates = project["GPS Coordinates"].split(",");
-        if (!coordinates) {
-          return;
-        }
+
         const position = new this.google.maps.LatLng(
-          coordinates[0],
-          coordinates[1]
+          project["Latitude"],
+          project["Longitude"]
         );
 
         const marker = new this.google.maps.Marker({
           position,
           map: this.map,
-          title: project.name,
+          title: project.Name,
           icon: this.getIconUrl(project.Application),
           properties: {
             application: project.Application,
-            power: project["Project total installed capacity (kW)"],
-            year: project["Commissioning Year"],
+            power: project["Total_installed_power_kWel"],
+            year: project["Year_of_construction"],
             manufacturer: project["Manufacturer"],
           },
         });
@@ -257,7 +272,7 @@ export default {
       }
       let contentString =
         '<div id="content">' +
-        `<h3>${project["Project name"]}</h3>` +
+        `<h3>${project["Name"]}</h3>` +
         '<div id="bodyContent" style="text-align:left;line-height: 1.2rem;">' +
         `<b>Manufacturer: </b>${project["Manufacturer"]}</br>`;
       if (project["City"]) {
@@ -267,42 +282,28 @@ export default {
       }
 
       contentString += `<b>Application: </b>${project["Application"]}`;
-      if (project["Application 2"]) {
-        contentString += `- ${project["Application 2"]}</br>`;
+      if (project["Sub_application"]) {
+        contentString += `- ${project["Sub_application"]}</br>`;
       } else {
         contentString += "</br>";
       }
 
-      if (project["Commissioning Year"] != 3000) {
-        contentString += `<b>Commissioning: </b>${project["Commissioning Year"]}<br/>`;
+      if (project["Year_of_construction"]) {
+        contentString += `<b>Construction: </b>${project["Year_of_construction"]}<br/>`;
       } else {
-        contentString += `<b>Commissioning: </b>In construction<br/>`;
+        contentString += `<b>Construction: </b>In construction<br/>`;
       }
 
-      contentString += `<b>Model: </b>${showValue(project["Model"])}<br/>`;
-      contentString += `<b>Installed Capacity: </b>${showValue(
-        project["Project total installed capacity (kW)"]
+      contentString += `<b>Total Installed Capacity: </b>${showValue(
+        project["Total_installed_power_kWel"]
+      )} kWel<br/>`;
+      contentString += `<b>Number of parallel units in the plant: </b>${showValue(
+        project["Number_of_parallel_units_in_the_plant"]
       )}<br/>`;
-      contentString += `<b>Number of units: </b>${showValue(
-        project["Number of units"]
-      )}<br/>`;
-      contentString += `<b>Working Fluid: </b>${showValue(
-        project["Working Fluid"]
-      )}</br>`;
-      contentString += `<b>Turbine: </b>${showValue(project["Turbine"])}</br>`;
 
-      if (project["Customer"]) {
-        contentString += `<b>Customer: </b>${showValue(
-          project["Customer"]
-        )}</br>`;
-      }
       if (project["Description"]) {
         contentString += `<br/><p>${project["Description"]}</p>`;
       }
-      // if (project["Image"]) {
-      //   contentString += `<br/><img src="${project["Image"]}" style="max-width:400px;"/><br/><br/>`;
-      // }
-
       if (project["Manufacturer website"]) {
         contentString += `<b>Manufacturer website: </b><a target="_blank" href="${project["Manufacturer website"]}">${project["Manufacturer website"]}</a></p>`;
       }
@@ -326,7 +327,7 @@ export default {
       }
 
       // filter by date
-      if (project.year == 3000) {
+      if (!project.year === null) {
         if (!filter.showInConstruction) {
           return false;
         }
@@ -370,7 +371,7 @@ export default {
       let minYear = 3000;
       let maxYear = 0;
       this.projects.forEach((project) => {
-        let year = project["Commissioning Year"];
+        let year = project["Year_of_construction"];
         if (year) {
           if (year < minYear) {
             minYear = year;
@@ -385,7 +386,7 @@ export default {
     getMaxCapacity() {
       let maxCapacity = 10000;
       this.projects.forEach((project) => {
-        let power = project["Project total installed capacity (kW)"];
+        let power = project["Total_installed_power_kWel"];
         if (power) {
           if (power > maxCapacity) {
             maxCapacity = power;
