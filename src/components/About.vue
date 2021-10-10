@@ -21,8 +21,9 @@
             >What did you use to build it?</a
           >
         </li>
+        <li><a href="#history">Project History</a></li>
         <li><a href="#credits">Credits</a></li>
-        <li><a href="#contact">Contact the Author</a></li>
+        <li><a href="#contact">Contact the Authors</a></li>
         <li><a href="#disclaimer">Disclaimer</a></li>
       </ul>
 
@@ -60,9 +61,7 @@
       <p>
         Some manufacturers do not publish their list of references and declined
         to take part to that survey. Therefore,
-        <strong>this database is not 100% exhaustive</strong>. As of July 2016,
-        we can consider that the remaining references do not represent more than
-        20 MW of installed capacity.
+        <strong>this database is not 100% exhaustive</strong>.
       </p>
       <h2 id="why-did-you-make-it">Why did you make it?</h2>
       <p>
@@ -114,6 +113,18 @@
         </li>
       </ul>
 
+      <h2 id="history">Project History</h2>
+
+      <p>
+        <ul>
+          <li> A first website was developed by Thomas Tartière in 2016</li>
+          <li> In parallel, Marco Astolfi built his own database of ORC projects</li>
+          <li> In September 2017, M. Astolfi and T. Tartière combined their data and published an overview of the ORC market at the IV International Seminar on ORC Power Systems, in Milano</li>
+          <li> 2018: Google retired the Fusion Table service that the map was built on. The site ceases to work.</li>
+          <li> 2021: A new version of the site is built and released with an updated database.</li>
+        </ul>
+      </p>
+
       <h2 id="credits">Credits</h2>
       <p>
         This site was built, designed and hosted entirely by
@@ -121,6 +132,11 @@
           >Thomas Tarti&egrave;re</a
         >
         in his own free time for no money.
+      </p>
+
+      <p>
+        Thank you to Marco Astolfi from University of Milano for keeping the
+        database up to date !
       </p>
 
       <p>

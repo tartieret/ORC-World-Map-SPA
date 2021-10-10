@@ -81,10 +81,13 @@
 
           <div id="search-footer">
             <small>
-              A project by
+              Original website by
               <a href="https://ca.linkedin.com/in/thomastartiere"
                 >Thomas Tartière</a
-              >. Last update 09/20/2018
+              >. Database update by
+              <a href="https://www.linkedin.com/in/marco-astolfi-16a5781a/"
+                >Marco Astolfi</a
+              >. <br />Last update 10/09/2021
             </small>
           </div>
         </div>
@@ -316,7 +319,7 @@ export default {
       return infowindow;
     },
     isProjectIncluded(project) {
-      // const filter = this.search;
+      const filter = this.search;
       // filter by type of project
       if (
         !Object.prototype.hasOwnProperty.call(
@@ -327,24 +330,24 @@ export default {
         return false;
       }
 
-      // // filter by date
-      // if (project.year === null || project.year === "") {
-      //   if (!filter.showInConstruction) {
-      //     return false;
-      //   }
-      // } else if (
-      //   project.year < filter.years[0] ||
-      //   project.year > filter.years[1]
-      // ) {
-      //   return false;
-      // }
-      // // filter by power
-      // if (
-      //   project.power < filter.powers[0] ||
-      //   project.power > filter.powers[1]
-      // ) {
-      //   return false;
-      // }
+      // filter by date
+      if (project.year === null || project.year === "") {
+        if (!filter.showInConstruction) {
+          return false;
+        }
+      } else if (
+        project.year < filter.years[0] ||
+        project.year > filter.years[1]
+      ) {
+        return false;
+      }
+      // filter by power
+      if (
+        project.power < filter.powers[0] ||
+        project.power > filter.powers[1]
+      ) {
+        return false;
+      }
       return project;
     },
     filterProjects() {
@@ -447,5 +450,20 @@ export default {
   margin-bottom: 40px;
   margin-left: 15px;
   margin-right: 15px;
+}
+
+#checkbox_geothermal:before {
+  background-color: red;
+}
+#checkbox_geothermal
+  #checkbox_geothermal_input:checked
+  ~ .checkbox_geothermal_label::before {
+  background-color: black;
+}
+
+.custom-control-input:checked ~ .custom-control-label::before {
+  color: #fff;
+  border-color: #f00;
+  background-color: #f00;
 }
 </style>
