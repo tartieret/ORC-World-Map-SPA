@@ -1,5 +1,14 @@
 <template>
   <b-container fluid>
+    <div
+      v-if="isLoading"
+      class="loadingOverlay h-100 row align-items-center text-center"
+    >
+      <div class="col">
+        <b-spinner label="Loading projects..."></b-spinner>
+        <p class="mt-2">Loading projects...</p>
+      </div>
+    </div>
     <b-row>
       <b-col sm="12" md="6" lg="4">
         <div id="search-panel">
@@ -146,9 +155,10 @@ export default {
     };
   },
   async created() {
-    await this.loadProjects();
+    this.isLoading = true;
 
-    // this.initializeFilters();
+    await this.loadProjects();
+    this.initializeFilters();
 
     try {
       // initialize google map
@@ -170,10 +180,11 @@ export default {
     } catch (error) {
       console.error(error);
     }
+
+    this.isLoading = false;
   },
   methods: {
     async loadProjects() {
-      this.isLoading = true;
       console.log("Load projects");
       await this.$store
         .dispatch("loadProjects")
@@ -181,10 +192,7 @@ export default {
           this.projects = projects;
           console.debug(projects);
         })
-        .catch(() => {})
-        .finally(() => {
-          this.isLoading = false;
-        });
+        .catch(() => {});
     },
     initializeFilters() {
       console.debug(this.projects);
@@ -407,13 +415,14 @@ export default {
 </script>
 
 <style scoped>
-.loading {
+.loadingOverlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   z-index: 10;
+  background-color: white;
 }
 #googleMap {
   position: absolute !important;
