@@ -4,23 +4,34 @@ function convertResponseToJSON(text) {
     return JSON.parse(text.substr(47).slice(0, -2))
 }
 
+/**
+ * Make sure that the value has the correct formatting
+ * For instance "Heat recovery" would become "heat_recovery"
+ * @param {String} header 
+ * @param {String} value 
+ * @returns 
+ */
+function cleanValue(header, value) {
+    if (header === "application") {
+        return value.toLowerCase().replace(" ", "_")
+    }
+    return value;
+}
+
 function formatSheetData(json) {
     const data = [] /* this array will eventually be populated with the contents of the spreadsheet's rows */
-    const headers = json.table.cols.map(obj => obj.label).filter(label => label !== "");
+    const headers = json.table.cols.map(obj => obj.label.toLowerCase()).filter(label => label !== "");
     const rows = json.table.rows;
-
-    console.log(json);
 
     for (const row of rows) {
         let item = {};
         for (let i = 0; i < headers.length; i++) {
             const header = headers[i];
             if (row.c[i] !== null) {
-                item[header] = row.c[i].v;
+                item[header] = cleanValue(header, row.c[i].v);
             } else {
                 item[header] = null;
             }
-
         }
         data.push(item);
     }

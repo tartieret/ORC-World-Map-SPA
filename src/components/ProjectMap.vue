@@ -25,10 +25,10 @@
               <b-form-checkbox value="geothermal">Geothermal</b-form-checkbox>
               <b-form-checkbox value="biomass">Biomass</b-form-checkbox>
               <b-form-checkbox value="solar">Solar</b-form-checkbox>
-              <b-form-checkbox value="heat recovery"
+              <b-form-checkbox value="heat_recovery"
                 >Heat Recovery</b-form-checkbox
               >
-              <b-form-checkbox value="Waste to Energy"
+              <b-form-checkbox value="waste_to_energy"
                 >Waste to Energy</b-form-checkbox
               >
             </b-form-checkbox-group>
@@ -115,8 +115,8 @@ export default {
           "geothermal",
           "biomass",
           "solar",
-          "heat recovery",
-          "Waste to Energy",
+          "heat_recovery",
+          "waste_to_energy",
         ],
       },
       sliderRanges: {
@@ -130,15 +130,15 @@ export default {
         geothermal: "#F00",
         biomass: "#9f9",
         solar: "#ff9",
-        "heat recovery": "#99f",
-        "Waste to Energy": "#99f",
+        heat_recovery: "#99f",
+        waste_to_energy: "#99f",
       },
       icons: {
         geothermal: "/icons/geothermal.png",
         solar: "/icons/solar.png",
         biomass: "/icons/biomass.png",
-        "heat recovery": "/icons/heat_recovery.png",
-        "Waste to Energy": "/icons/heat_recovery.png",
+        heat_recovery: "/icons/heat_recovery.png",
+        waste_to_energy: "/icons/heat_recovery.png",
       },
     };
   },
@@ -215,7 +215,8 @@ export default {
         "geothermal",
         "biomass",
         "solar",
-        "heat recovery",
+        "heat_recovery",
+        "waste_to_energy",
       ];
       this.search.showInConstruction = true;
 
@@ -225,30 +226,30 @@ export default {
       this.projects.forEach((project) => {
         // build a marker for the project
         if (
-          !("Latitude" in project) ||
-          !("Longitude" in project) ||
-          !project["Latitude"] ||
-          !project["Longitude"] ||
-          project["Application"] == "other"
+          !("latitude" in project) ||
+          !("longitude" in project) ||
+          !project["latitude"] ||
+          !project["longitude"] ||
+          project["application"] == "other"
         ) {
           return;
         }
 
         const position = new this.google.maps.LatLng(
-          project["Latitude"],
-          project["Longitude"]
+          project["latitude"],
+          project["longitude"]
         );
 
         const marker = new this.google.maps.Marker({
           position,
           map: this.map,
-          title: project.Name,
-          icon: this.getIconUrl(project.Application),
+          title: project.name,
+          icon: this.getIconUrl(project.application),
           properties: {
-            application: project.Application,
-            power: project["Total_installed_power_kWel"],
-            year: project["Year_of_construction"],
-            manufacturer: project["Manufacturer"],
+            application: project.application,
+            power: project["total_installed_power_kwel"],
+            year: project["year_of_construction"],
+            manufacturer: project["manufacturer"],
           },
         });
         // add the info window and open it when the user clicks
@@ -272,40 +273,40 @@ export default {
       }
       let contentString =
         '<div id="content">' +
-        `<h3>${project["Name"]}</h3>` +
+        `<h3>${project["name"]}</h3>` +
         '<div id="bodyContent" style="text-align:left;line-height: 1.2rem;">' +
-        `<b>Manufacturer: </b>${project["Manufacturer"]}</br>`;
+        `<b>Manufacturer: </b>${project["manufacturer"]}</br>`;
       if (project["City"]) {
-        contentString += `<b>Location: </b>${project["City"]}, ${project["Country"]}<br/>`;
+        contentString += `<b>Location: </b>${project["city"]}, ${project["country"]}<br/>`;
       } else {
-        contentString += `<b>Location: </b>${project["Country"]}<br/>`;
+        contentString += `<b>Location: </b>${project["country"]}<br/>`;
       }
 
-      contentString += `<b>Application: </b>${project["Application"]}`;
-      if (project["Sub_application"]) {
-        contentString += `- ${project["Sub_application"]}</br>`;
+      contentString += `<b>Application: </b>${project["application"]}`;
+      if (project["sub_application"]) {
+        contentString += `- ${project["sub_application"]}</br>`;
       } else {
         contentString += "</br>";
       }
 
-      if (project["Year_of_construction"]) {
-        contentString += `<b>Construction: </b>${project["Year_of_construction"]}<br/>`;
+      if (project["year_of_construction"]) {
+        contentString += `<b>Construction: </b>${project["year_of_construction"]}<br/>`;
       } else {
         contentString += `<b>Construction: </b>In construction<br/>`;
       }
 
       contentString += `<b>Total Installed Capacity: </b>${showValue(
-        project["Total_installed_power_kWel"]
+        project["total_installed_power_kwel"]
       )} kWel<br/>`;
       contentString += `<b>Number of parallel units in the plant: </b>${showValue(
-        project["Number_of_parallel_units_in_the_plant"]
+        project["number_of_parallel_units_in_the_plant"]
       )}<br/>`;
 
       if (project["Description"]) {
-        contentString += `<br/><p>${project["Description"]}</p>`;
+        contentString += `<br/><p>${project["description"]}</p>`;
       }
       if (project["Manufacturer website"]) {
-        contentString += `<b>Manufacturer website: </b><a target="_blank" href="${project["Manufacturer website"]}">${project["Manufacturer website"]}</a></p>`;
+        contentString += `<b>Manufacturer website: </b><a target="_blank" href="${project["manufacturer website"]}">${project["manufacturer website"]}</a></p>`;
       }
       contentString += "</div>";
 
@@ -315,7 +316,7 @@ export default {
       return infowindow;
     },
     isProjectIncluded(project) {
-      const filter = this.search;
+      // const filter = this.search;
       // filter by type of project
       if (
         !Object.prototype.hasOwnProperty.call(
@@ -326,26 +327,25 @@ export default {
         return false;
       }
 
-      // filter by date
-      if (!project.year === null) {
-        if (!filter.showInConstruction) {
-          return false;
-        }
-      } else if (
-        project.year < filter.years[0] ||
-        project.year > filter.years[1]
-      ) {
-        return false;
-      }
-      // filter by power
-      if (
-        project.power < filter.powers[0] ||
-        project.power > filter.powers[1]
-      ) {
-        return false;
-      }
-
-      return true;
+      // // filter by date
+      // if (project.year === null || project.year === "") {
+      //   if (!filter.showInConstruction) {
+      //     return false;
+      //   }
+      // } else if (
+      //   project.year < filter.years[0] ||
+      //   project.year > filter.years[1]
+      // ) {
+      //   return false;
+      // }
+      // // filter by power
+      // if (
+      //   project.power < filter.powers[0] ||
+      //   project.power > filter.powers[1]
+      // ) {
+      //   return false;
+      // }
+      return project;
     },
     filterProjects() {
       let nb_shown = this.markers.length;
@@ -371,7 +371,7 @@ export default {
       let minYear = 3000;
       let maxYear = 0;
       this.projects.forEach((project) => {
-        let year = project["Year_of_construction"];
+        let year = project["year_of_construction"];
         if (year) {
           if (year < minYear) {
             minYear = year;
@@ -386,7 +386,7 @@ export default {
     getMaxCapacity() {
       let maxCapacity = 10000;
       this.projects.forEach((project) => {
-        let power = project["Total_installed_power_kWel"];
+        let power = project["total_installed_power_kWel"];
         if (power) {
           if (power > maxCapacity) {
             maxCapacity = power;
