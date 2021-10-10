@@ -1,24 +1,24 @@
 const URL = 'https://docs.google.com/spreadsheets/d/1wCkMtyLMCsLfRQv49NWKu7SN4OASgH-aw2TrFxOtDVQ/gviz/tq?tqx=out:json';
 
-function convertResponseToJSON(text) {
+function convertResponseToJSON (text) {
     return JSON.parse(text.substr(47).slice(0, -2))
 }
 
 /**
  * Make sure that the value has the correct formatting
  * For instance "Heat recovery" would become "heat_recovery"
- * @param {String} header 
- * @param {String} value 
- * @returns 
+ * @param {String} header
+ * @param {String} value
+ * @returns
  */
-function cleanValue(header, value) {
+function cleanValue (header, value) {
     if (header === "application") {
-        return value.toLowerCase().replace(" ", "_")
+        return value.toLowerCase().replaceAll(" ", "_")
     }
     return value;
 }
 
-function formatSheetData(json) {
+function formatSheetData (json) {
     const data = [] /* this array will eventually be populated with the contents of the spreadsheet's rows */
     const headers = json.table.cols.map(obj => obj.label.toLowerCase()).filter(label => label !== "");
     const rows = json.table.rows;
@@ -41,7 +41,7 @@ function formatSheetData(json) {
 /**
  * Load list of projects from Google Sheet
  */
-export function loadProjects({ commit }) {
+export function loadProjects ({ commit }) {
     return new Promise((resolve, reject) => {
 
         fetch(URL)
