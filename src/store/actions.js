@@ -41,9 +41,7 @@ function formatSheetData(json) {
 /**
  * Load list of projects from Google Sheet
  */
-// export function loadProjects({ commit }) {
-export function loadProjects() {
-
+export function loadProjects({ commit }) {
     return new Promise((resolve, reject) => {
 
         fetch(URL)
@@ -51,9 +49,7 @@ export function loadProjects() {
             .then(text => convertResponseToJSON(text))
             .then(json => {
                 const data = formatSheetData(json);
-                // data.forEach(project => {
-                //     commit("ADD_PROJECT", project);
-                // })
+                commit("SET_PROJECTS", data);
                 resolve(data);
             })
             .catch(error => {

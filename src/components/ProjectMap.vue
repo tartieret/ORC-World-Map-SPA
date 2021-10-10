@@ -185,17 +185,26 @@ export default {
   },
   methods: {
     async loadProjects() {
-      console.log("Load projects");
-      await this.$store
-        .dispatch("loadProjects")
-        .then((projects) => {
-          this.projects = projects;
-          console.debug(projects);
-        })
-        .catch(() => {});
+      console.debug("Loading projects: ", this.$store.getters["getProjects"]);
+      // check if the store already contains the projects
+      const loadedProjects = this.$store.getters["getProjects"];
+      if (loadedProjects.length === 0) {
+        console.debug("Load projects from Google Sheet");
+        // if not reload them from google sheet
+        await this.$store
+          .dispatch("loadProjects")
+          .then((projects) => {
+            this.projects = projects;
+          })
+          .catch((error) => {
+            console.error("Failed to load projects: ", error);
+          });
+      } else {
+        console.debug("Found projects in Vuex store", loadedProjects);
+        this.projects = loadedProjects;
+      }
     },
     initializeFilters() {
-      console.debug(this.projects);
       // adjust the year slider range based on the project data
       this.search.years = this.getMinMaxYears;
       this.sliderRanges.years.min = this.search.years[0];
@@ -379,8 +388,8 @@ export default {
       }, {});
     },
     getMinMaxYears() {
-      let minYear = 3000;
-      let maxYear = 0;
+      let minYear = 2000;
+      let maxYear = 2001;
       this.projects.forEach((project) => {
         let year = project["year_of_construction"];
         if (year) {
