@@ -103,7 +103,7 @@
                             <a
                                 href="https://www.linkedin.com/in/marco-astolfi-16a5781a/"
                                 >Marco Astolfi</a
-                            >. <br />Last update: Aug. 2023
+                            >. <br />Last update: Sept. 2025
                         </small>
                     </div>
                 </div>
